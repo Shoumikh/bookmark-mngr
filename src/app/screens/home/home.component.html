@@ -1,0 +1,213 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <!-- Container wrapper -->
+  <div class="container">
+    <!-- Collapsible wrapper -->
+    <div
+      class="collapse navbar-collapse"
+      id="navbarButtonsExample"
+      mdbCollapse
+      #buttonsNav="mdbCollapse"
+    >
+      <!-- Left links -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <!-- <a class="nav-link title" href="#">Bookmark Manager</a> -->
+          <h6 class="title">Bookmark Manager</h6>
+        </li>
+      </ul>
+      <!-- Left links -->
+
+      <div class="d-flex align-items-center">
+        <button
+          type="button"
+          class="btn btn-primary me-3"
+          (click)="open(content)"
+        >
+          Add Bookmark
+        </button>
+      </div>
+    </div>
+    <!-- Collapsible wrapper -->
+  </div>
+  <!-- Container wrapper -->
+</nav>
+<!-- Navbar -->
+
+<div class="home__bodyContainer row">
+  <div class="col-lg-6">
+    <div
+      class="home__category"
+      *ngFor="let bookmark of bookmarks; let i = index"
+    >
+      <div class="card">
+        <div class="card-body">
+          <h6 class="">{{ bookmark.name }}</h6>
+          <ul
+            class="list-group list-group-light"
+            *ngFor="let item of bookmark.data; let j = index"
+          >
+            <li class="list-group-item">
+              {{ item.title }}
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-rounded details-btn"
+                (click)="showDetails(item.title, item.url, item.category)"
+              >
+                Details
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="home__details col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="ml-5">Bookmark Details</h6>
+        <div class="p-5">
+          <div class="p-2">
+            <span>Title: </span>
+            <span> {{ selectedTitle }}</span>
+          </div>
+          <div class="p-2">
+            <span>URL: </span>
+            <a href="selectedUrl">{{ selectedUrl }}</a>
+          </div>
+          <div class="p-2">
+            <span>Category: </span>
+            <span> {{ selectedCategory }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h6 class="modal-title" id="modal-basic-title">Add Bookmark</h6>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <form [formGroup]="addForm" (ngSubmit)="onSubmit(addForm)">
+    <div class="modal-body m-3">
+      <div class="form-group mb-3">
+        <input
+          type="text"
+          class="form-control"
+          formControlName="title"
+          id="exampleInputTitle"
+          aria-describedby="titleHelp"
+          placeholder="Title"
+        />
+
+        <div
+          class="validation"
+          *ngIf="
+            addForm?.get('title')?.invalid &&
+            (addForm?.get('title')?.dirty || addForm?.get('email')?.touched)
+          "
+        >
+          Title is required and should not greater than 30 characters
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <input
+          type="text"
+          class="form-control"
+          formControlName="url"
+          id="exampleInputUrl"
+          aria-describedby="UrlHelp"
+          placeholder="Url"
+        />
+
+        <div
+          class="validation"
+          *ngIf="
+            addForm?.get('url')?.invalid &&
+            (addForm?.get('url')?.dirty || addForm?.get('url')?.touched)
+          "
+        >
+          Url is required
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <!-- <input
+          type="category"
+          class="form-control"
+          formControlName="password"
+          id="exampleInputPassword1"
+          placeholder="Password"
+        /> -->
+        <!-- <div class="validation"
+              *ngIf="signupForm?.get('password')?.invalid
+                  && (signupForm?.get('password')?.dirty || signupForm?.get('password')?.touched)">
+              Messages must be at least 4 characters long.
+          </div> -->
+        <div class="form-group category-box">
+          <select
+            id="exampleCategory"
+            class="form-control mr-2"
+            formControlName="category"
+            aria-describedby="CategoryHelp"
+            placeholder="Category"
+            [disabled]="isNewCategory"
+          >
+            <option selected>Choose Category</option>
+            <option>Category A</option>
+            <option>Category B</option>
+          </select>
+          <button
+            type="button"
+            class="btn btn-outline-dark ml-2"
+            (click)="toggleCategory()"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      <!-- [disabled]="signupForm?.invalid" -->
+      <!-- <button
+        type="submit"
+        class="btn btn-sm signup__button btn-block w-100 d-block"
+      >
+        Sign Up
+      </button> -->
+      <div *ngIf="isNewCategory" class="form-group mb-4">
+        <input
+          type="text"
+          class="form-control"
+          formControlName="newCategory"
+          id="exampleInputNewCategory"
+          aria-describedby="newCategoryHelp"
+          placeholder="New Category"
+        />
+
+        <!-- <div class="validation"
+      *ngIf="signupForm?.get('email')?.invalid
+              && (signupForm?.get('email')?.dirty || signupForm?.get('email')?.touched)">
+      Please provide a valid email address.
+    </div> -->
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="submit"
+        class="btn btn-primary me-3"
+        (click)="c('Save click')"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+</ng-template>
